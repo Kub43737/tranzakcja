@@ -38,6 +38,15 @@ SELECT
             ELSE 1
         END
         *
+        CASE 
+        WHEN COUNT(*) = 1 THEN 5     -- 1 auto  → 5%
+        WHEN COUNT(*) = 2 THEN 12    -- 2 auta → 12%
+        WHEN COUNT(*) = 3 THEN 20    -- 3 auta → 20%
+        WHEN COUNT(*) = 4 THEN 28    -- 4 auta → 28%
+        WHEN COUNT(*) >= 5 THEN 35   -- 5+ aut → max 35%
+        ELSE 0
+        END AS rabat_za_flote_proc
+        *
         (1 - (
             (SELECT COUNT(*) * 0.05 
              FROM cars AS c2 

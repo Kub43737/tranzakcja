@@ -7,7 +7,13 @@ SELECT
     cars.model,
     cars.rok,
     clients.email,
-    
+
+    CASE
+        WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 1940 AND 1979 THEN 1300
+        WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 1980 AND 1999 THEN 2200
+        WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 2000 AND 2015 THEN 2500
+        ELSE 1000
+    END AS cena_bazowa_zł,
 
     (
         CASE
@@ -15,19 +21,8 @@ SELECT
             WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 1980 AND 1999 THEN 2200
             WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 2000 AND 2015 THEN 2500
             ELSE 1000
-          END
-    ) AS cena_bazowa_zł,
-    
-
-    (
-        (
-        CASE
-            WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 1940 AND 1979 THEN 1300
-            WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 1980 AND 1999 THEN 2200
-            WHEN CAST(cars.rok AS UNSIGNED) BETWEEN 2000 AND 2015 THEN 2500
-            ELSE 1000
-          END)
-        * 
+        END
+        *
         CASE
             WHEN clients.email LIKE '%apple%' THEN 1.4
             ELSE 1
@@ -39,13 +34,13 @@ SELECT
         END
         *
         CASE
-        WHEN COUNT(*) = 1 THEN 0.95     
-        WHEN COUNT(*) = 2 THEN 0.90    
-        WHEN COUNT(*) = 3 THEN 0.85    
-        WHEN COUNT(*) = 4 THEN 0.80    
-        WHEN COUNT(*) >= 5 THEN 0.75   
-        ELSE 0
-        END AS rabat_za_flote_proc
+            WHEN (SELECT COUNT(*) FROM cars c2 WHERE c2.client_id = clients.id) = 1 THEN 0.95
+            WHEN (SELECT COUNT(*) FROM cars c2 WHERE c2.client_id = clients.id) = 2 THEN 0.90
+            WHEN (SELECT COUNT(*) FROM cars c2 WHERE c2.client_id = clients.id) = 3 THEN 0.85
+            WHEN (SELECT COUNT(*) FROM cars c2 WHERE c2.client_id = clients.id) = 4 THEN 0.80
+            WHEN (SELECT COUNT(*) FROM cars c2 WHERE c2.client_id = clients.id) >= 5 THEN 0.75
+            ELSE 1
+        END
         *
         (1 - (
             (SELECT COUNT(*) * 0.05 

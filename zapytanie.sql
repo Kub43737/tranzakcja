@@ -39,11 +39,11 @@ SELECT
         END
         *
         CASE
-        WHEN COUNT(*) = 1 THEN 5     
-        WHEN COUNT(*) = 2 THEN 10    
-        WHEN COUNT(*) = 3 THEN 15    
-        WHEN COUNT(*) = 4 THEN 20    
-        WHEN COUNT(*) >= 5 THEN 25   
+        WHEN COUNT(*) = 1 THEN 0.95     
+        WHEN COUNT(*) = 2 THEN 0.90    
+        WHEN COUNT(*) = 3 THEN 0.85    
+        WHEN COUNT(*) = 4 THEN 0.80    
+        WHEN COUNT(*) >= 5 THEN 0.75   
         ELSE 0
         END AS rabat_za_flote_proc
         *
